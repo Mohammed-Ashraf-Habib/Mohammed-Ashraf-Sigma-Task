@@ -5,20 +5,13 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task.WepApi", "Task.WepApi.csproj", "{D59AAD56-0B2C-47AE-AA92-B5208052B332}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task.DAL", "..\Task.DAL\Task.DAL.csproj", "{F63DDC45-DD5D-4AF5-ADA4-B05F9EBA0795}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task.DAL", "..\Task.DAL\Task.DAL.csproj", "{F63DDC45-DD5D-4AF5-ADA4-B05F9EBA0795}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task.Business", "..\Task.Business\Task.Business.csproj", "{E7FA5164-3BC1-497F-BA19-06C193722C90}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task.Business", "..\Task.Business\Task.Business.csproj", "{E7FA5164-3BC1-497F-BA19-06C193722C90}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task.Xunit", "..\Task.Xunit\Task.Xunit.csproj", "{3EB51ED3-B1F8-4831-BC75-791748041671}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task.Xunit", "..\Task.Xunit\Task.Xunit.csproj", "{3EB51ED3-B1F8-4831-BC75-791748041671}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E7FA5164-3BC1-497F-BA19-06C193722C90} = {E7FA5164-3BC1-497F-BA19-06C193722C90}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{96AEFDC0-76A6-41DB-AAFD-ACB5C1698C70}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{E8BF9D80-2A0D-4E7D-8A28-CFA5AC0FAA34}"
-	ProjectSection(SolutionItems) = preProject
-		sigmaTask-pipline.yaml = sigmaTask-pipline.yaml
 	EndProjectSection
 EndProject
 Global
@@ -46,9 +39,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{E8BF9D80-2A0D-4E7D-8A28-CFA5AC0FAA34} = {96AEFDC0-76A6-41DB-AAFD-ACB5C1698C70}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4A813738-1563-41FF-8B00-99340249AB40}
