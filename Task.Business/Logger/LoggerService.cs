@@ -1,4 +1,3 @@
-#region Using ...
 
 using Microsoft.Extensions.Configuration;
 
@@ -10,7 +9,6 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 
-#endregion
 
 
 namespace Task.Business.Logger
