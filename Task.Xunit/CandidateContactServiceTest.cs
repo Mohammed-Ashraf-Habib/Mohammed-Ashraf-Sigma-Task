@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Internal;
 using System.Globalization;
 using Task.Business;
 using Task.Business.DTO;
@@ -29,11 +31,31 @@ namespace Task.Xunit
             Assert.NotNull(mapperConfiguration);
             AutoMapper.Mapper mapper = new AutoMapper.Mapper(mapperConfiguration);
             Assert.NotNull(mapper);
-            CandidateContactService service = new CandidateContactService(candidateContactRepository, unitOfWorkAsync, mapper);
+            MemoryCacheOptions memoryCacheOptions = new MemoryCacheOptions();
+            Assert.NotNull(memoryCacheOptions);
+            memoryCacheOptions.Clock = new SystemClock();
+            memoryCacheOptions.ExpirationScanFrequency = TimeSpan.FromSeconds(1);
+
+            MemoryCache memoryCache = new MemoryCache(memoryCacheOptions);
+            CandidateContactService service = new CandidateContactService(candidateContactRepository, unitOfWorkAsync, mapper, memoryCache);
             Assert.NotNull(service);
             return service;
         }
         private void compare(CandidateContactDTO candidateContactDTO, Task.DAL.Entity.CandidateContact candidateContact)
+        {
+            Assert.NotNull(candidateContactDTO);
+            Assert.NotNull(candidateContact);
+            Assert.Equal(candidateContactDTO.Id, candidateContact.Id);
+            Assert.Equal(candidateContactDTO.FirstName, candidateContact.FirstName);
+            Assert.Equal(candidateContactDTO.LastName, candidateContact.LastName);
+            Assert.Equal(candidateContactDTO.Email, candidateContact.Email);
+            Assert.Equal(candidateContactDTO.CallTime, candidateContact.CallTime);
+            Assert.Equal(candidateContactDTO.Comment, candidateContact.Comment);
+            Assert.Equal(candidateContactDTO.GitHub, candidateContact.GitHub);
+            Assert.Equal(candidateContactDTO.LinkedIn, candidateContact.LinkedIn);
+            Assert.Equal(candidateContactDTO.PhoneNumber, candidateContact.PhoneNumber);
+        }
+        private void compareDTOS(CandidateContactDTO candidateContactDTO, CandidateContactDTO candidateContact)
         {
             Assert.NotNull(candidateContactDTO);
             Assert.NotNull(candidateContact);
@@ -120,7 +142,68 @@ namespace Task.Xunit
                 compare(candidateContactDTO, candidateContact);
             }
         }
-      
+        [Fact]
+        public void CandidateContactService__GetAll__TestCache()
+        {
+            CandidateContactService service = PrepareService();
+            Assert.NotNull(service);
+            //First Add 1000 CandidateContacts
+            List<long> ids = new List<long>();
+            for (int i = 0; i < 2000; i++)
+            {
+                var newCandidateContact = new Task.Business.DTO.CandidateContactDTO
+                {
+                    FirstName = $"Candidate{i}",
+                    LastName = $"Candidate{i}",
+                    Email = $"Candidate{i}",
+                    CallTime = $"Candidate{i}",
+                    Comment = $"Candidate{i}",
+                    GitHub = $"Candidate{i}",
+                    LinkedIn = $"Candidate{i}",
+                    PhoneNumber = $"Candidate{i}"
+
+                    
+                };
+                var result = service.AddOrUpdateCandidateContact(newCandidateContact).Result;
+                Assert.NotNull(result);
+                Assert.True(result.Id > 0);
+                ids.Add(result.Id);
+            }
+            //Get All CandidateContacts without cache and mesure time
+            var Timer = System.Diagnostics.Stopwatch.StartNew();
+            var resultWithoutCache = service.GetAllCandidateContacts().Result;
+            Timer.Stop();
+            var timeWithoutCache = Timer.ElapsedMilliseconds;
+            Assert.NotNull(resultWithoutCache);
+            Assert.True(resultWithoutCache.Count() > 0);
+            //Get All CandidateContacts with cache and mesure time
+            Timer = System.Diagnostics.Stopwatch.StartNew();
+            var resultWithCache = service.GetAllCandidateContacts().Result;
+            Timer.Stop();
+            var timeWithCache = Timer.ElapsedMilliseconds;
+            Assert.NotNull(resultWithCache);
+            Assert.True(resultWithCache.Count() > 0);
+            //Check if time with cache is less than time without cache
+            Assert.True(timeWithCache < timeWithoutCache);
+            //Check if the result is the same
+            Assert.Equal(resultWithoutCache.Count(), resultWithCache.Count());
+            foreach (var candidateContact in resultWithoutCache)
+            {
+                var candidateContactDTO = resultWithCache.FirstOrDefault(e => e.Id == candidateContact.Id);
+                compareDTOS(candidateContactDTO, candidateContact);
+            }
+            //Delete all CandidateContacts
+            foreach (var id in ids)
+            {
+                var candidateContact = _context.CandidateContacts.Find(id);
+                _context.CandidateContacts.Remove(candidateContact);
+            }
+            _context.SaveChanges();
+
+
+
+        }
+
         [InlineData(null, "updateCandidate1", "updateCandidate1", "updateCandidate1")]
         [InlineData("updateCandidate1", null, "updateCandidate1", "updateCandidate1")]
         [InlineData("updateCandidate1", "updateCandidate1", null, "updateCandidate1")]

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,18 +15,25 @@ namespace Task.Business.Service
     {
         private readonly ICandidateContactRepository _candidateContactRepository;
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
+        private readonly IMemoryCache _memoryCache;
         private readonly IMapper _mapper;
         
-        public CandidateContactService(ICandidateContactRepository candidateContactRepository, IUnitOfWorkAsync unitOfWorkAsync,IMapper mapper)
+        public CandidateContactService(ICandidateContactRepository candidateContactRepository, IUnitOfWorkAsync unitOfWorkAsync,IMapper mapper,IMemoryCache memoryCache)
         {
             _candidateContactRepository = candidateContactRepository;
             _unitOfWorkAsync = unitOfWorkAsync;
             _mapper = mapper;
+            _memoryCache = memoryCache;
         }
 
         public async Task<IEnumerable<CandidateContactDTO>> GetAllCandidateContacts()
         {
+            if (_memoryCache.TryGetValue("CandidateContacts", out IEnumerable<CandidateContactDTO> candidateContactsDTOs))
+            {
+                return candidateContactsDTOs;
+            }
             var candidateContacts = await _candidateContactRepository.GetAsync(null);
+            _memoryCache.Set("CandidateContacts", candidateContacts.Select(e => e.ToDTO(_mapper)));
             return candidateContacts.Select(e => e.ToDTO(_mapper));
         }
 
