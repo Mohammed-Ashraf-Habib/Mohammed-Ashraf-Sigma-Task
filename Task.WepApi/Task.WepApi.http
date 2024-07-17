@@ -1,0 +1,9 @@
+@Task.WepApi_HostAddress = https://localhost:44315
+
+GET {{Task.WepApi_HostAddress}}/weatherforecast/
+Accept: application/xml
+Cache-Control: cache
+
+###
+GET {{Task.WepApi_HostAddress}}/weatherforecast/
+Accept: application/xml
