@@ -1,0 +1,40 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+
+
+
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0.x'  # Use the version appropriate for your project
+
+    - name: Restore dependencies
+      working-directory: ./
+      run: dotnet restore ./Task.WepApi/Task.WepApi.csproj
+
+    - name: Build
+      working-directory: ./
+      run: dotnet build ./Task.WepApi/Task.WepApi.csproj --no-restore --configuration Release
+
+    - name: Run tests
+      working-directory: ./
+      run: dotnet test ./Task.WepApi/Task.WepApi.csproj --no-restore --verbosity normal
+
+
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file ./Task.WepApi/Dockerfile --tag my-image-name:$(date +%s)
