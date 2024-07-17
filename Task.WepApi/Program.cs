@@ -19,7 +19,6 @@ builder.Services.AddDbContext<TaskDbContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionString:TaskConnection"], b => b.MigrationsAssembly("Task.DAL"));
 });
 #endregion
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUnitOfWorkAsync, UnitOfWorkAsync>();
 builder.Services.AddScoped<ICandidateContactRepository, CandidateContactRepository>();
 builder.Services.AddScoped<ICandidateContactService, CandidateContactService>();

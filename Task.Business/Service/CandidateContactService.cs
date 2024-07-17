@@ -31,6 +31,10 @@ namespace Task.Business.Service
 
         public async Task<CandidateContactDTO> AddOrUpdateCandidateContact(CandidateContactDTO candidateContact)
         {
+            if (!ValidateCandidateContact(candidateContact))
+            {
+                throw new Exception("Invalid Candidate Contact");
+            }
             var candidateContactEntity = candidateContact.ToEntity(_mapper);
             if (candidateContactEntity.Id == 0)
             {
@@ -43,6 +47,13 @@ namespace Task.Business.Service
             await _unitOfWorkAsync.CommitAsync();
             return candidateContactEntity.ToDTO(_mapper);
         }
-
+        private bool ValidateCandidateContact(CandidateContactDTO candidateContact)
+        {
+            if (string.IsNullOrEmpty(candidateContact.FirstName) || string.IsNullOrEmpty(candidateContact.LastName) || string.IsNullOrEmpty(candidateContact.Email) || string.IsNullOrEmpty(candidateContact.Comment))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
