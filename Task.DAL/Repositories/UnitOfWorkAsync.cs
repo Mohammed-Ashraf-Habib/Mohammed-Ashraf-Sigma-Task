@@ -9,7 +9,7 @@ using Task.DAL.IRepositories;
 #endregion
 
 
-namespace ExtraOutServiceService.DataAccess.Repositories
+namespace Task.DAL.Repositories
 {
 	
 	public class UnitOfWorkAsync : IUnitOfWorkAsync

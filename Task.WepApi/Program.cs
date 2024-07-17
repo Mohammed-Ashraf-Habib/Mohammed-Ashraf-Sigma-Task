@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Task.Business.IService;
+using Task.Business.Service;
 using Task.DAL.Context;
+using Task.DAL.IRepositories;
+using Task.DAL.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +19,13 @@ builder.Services.AddDbContext<TaskDbContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionString:TaskConnection"], b => b.MigrationsAssembly("Task.DAL"));
 });
 #endregion
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWorkAsync, UnitOfWorkAsync>();
+builder.Services.AddScoped<ICandidateContactRepository, CandidateContactRepository>();
+builder.Services.AddScoped<ICandidateContactService, CandidateContactService>();
+builder.Services.AddAutoMapper(typeof(Task.Business.Profile).Assembly);
+
+
 
 var app = builder.Build();
 

@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Task.Business\Task.Business.csproj" />
     <ProjectReference Include="..\Task.DAL\Task.DAL.csproj" />
   </ItemGroup>
 

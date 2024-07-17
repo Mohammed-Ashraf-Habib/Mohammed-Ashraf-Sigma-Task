@@ -1,9 +1,39 @@
 @Task.WepApi_HostAddress = https://localhost:44315
 
-GET {{Task.WepApi_HostAddress}}/weatherforecast/
-Accept: application/xml
-Cache-Control: cache
+GET {{Task.WepApi_HostAddress}}/CandidateContact/GetAllCandidateContacts
+Accept: application/json
 
 ###
-GET {{Task.WepApi_HostAddress}}/weatherforecast/
-Accept: application/xml
+POST {{Task.WepApi_HostAddress}}/CandidateContact/AddOrUpdateCandidateContact
+Accept: application/json
+Content-Type: application/json
+
+{
+"Id": 0,
+  "FirstName": "string",
+  "LastName": "string",
+  "PhoneNumber": "string",
+  "Email": "string",
+  "CallTime": "string",
+  "LinkedIn": "string",
+  "GitHub": "string",
+  "Comment": "string"
+}
+
+
+###
+POST {{Task.WepApi_HostAddress}}/CandidateContact/AddOrUpdateCandidateContact
+Accept: application/json
+Content-Type: application/json
+
+{
+"Id": 1,
+  "FirstName": "string1",
+  "LastName": "string1",
+  "PhoneNumber": "string1",
+  "Email": "string1",
+  "CallTime": "string",
+  "LinkedIn": "string",
+  "GitHub": "string",
+  "Comment": "string"
+}

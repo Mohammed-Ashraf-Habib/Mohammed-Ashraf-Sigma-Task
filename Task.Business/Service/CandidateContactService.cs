@@ -16,10 +16,11 @@ namespace Task.Business.Service
         private readonly IUnitOfWorkAsync _unitOfWorkAsync;
         private readonly IMapper _mapper;
         
-        public CandidateContactService(ICandidateContactRepository candidateContactRepository, IUnitOfWorkAsync unitOfWorkAsync)
+        public CandidateContactService(ICandidateContactRepository candidateContactRepository, IUnitOfWorkAsync unitOfWorkAsync,IMapper mapper)
         {
             _candidateContactRepository = candidateContactRepository;
             _unitOfWorkAsync = unitOfWorkAsync;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<CandidateContactDTO>> GetAllCandidateContacts()
